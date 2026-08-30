@@ -1,8 +1,14 @@
+import { formatErrorForLog } from '~~/server/core/utils/error'
 import { steamAuth } from '~~/server/core/utils/steamAuth'
 
 export default defineEventHandler(async (event) => {
   try {
-    const { origin } = getQuery(event) as { origin: string }
+    const runtimeConfig = useRuntimeConfig(event)
+    const origin = String(runtimeConfig.public.origin || getRequestURL(event).origin).replace(/\/+$/, '')
+    const protocol = new URL(origin).protocol
+    if (protocol !== 'http:' && protocol !== 'https:')
+      throw new Error('Unsupported public origin protocol.')
+
     const { getRedirectUrl } = steamAuth(origin)
     const redirectUrl = await getRedirectUrl()
 
@@ -11,9 +17,10 @@ export default defineEventHandler(async (event) => {
     }
   }
   catch (error) {
+    console.error(`[Steam Card] authentication initialization failed: ${formatErrorForLog(error)}`)
     throw createError({
       statusCode: 500,
-      statusMessage: error instanceof Error ? error.message : 'Steam authentication failed.',
+      statusMessage: 'Steam authentication failed.',
     })
   }
 })

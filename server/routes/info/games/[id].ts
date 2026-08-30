@@ -1,4 +1,5 @@
 import { getOwnedGames } from '~~/server/core/request/steamApi'
+import { formatErrorForLog } from '~~/server/core/utils/error'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -21,9 +22,10 @@ export default defineEventHandler(async (event) => {
     }
   }
   catch (error) {
+    console.error(`[Steam Card] owned games lookup failed: ${formatErrorForLog(error)}`)
     throw createError({
-      statusCode: 500,
-      statusMessage: error instanceof Error ? error.message : 'Unable to load owned games.',
+      statusCode: 502,
+      statusMessage: 'Unable to contact Steam.',
     })
   }
 })

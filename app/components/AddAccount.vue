@@ -14,12 +14,7 @@ const route = useRoute()
 async function handleLogin() {
   try {
     steamLoginLoading.value = true
-    const origin = encodeURI(location.origin)
-    const { redirectUrl } = await $fetch('/auth/steam', {
-      params: {
-        origin,
-      },
-    })
+    const { redirectUrl } = await $fetch('/auth/steam')
 
     if (!redirectUrl)
       throw new Error('Steam authentication URL is unavailable.')
@@ -63,7 +58,7 @@ async function handleAdd() {
     //   router.replace('/')
   }
   catch {
-    $toast.error(t('toast.already-exists'))
+    $toast.error(t('toast.add-account-fail'))
   }
   finally {
     addBtnLoading.value = false

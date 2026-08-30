@@ -15,6 +15,7 @@
   "toast": {
     "login-fail": "登录失败",
     "add-account-success": "账号添加成功",
+    "add-account-fail": "无法加载该 Steam 账号",
     "already-exists": "账号已存在"
   },
   "config": {

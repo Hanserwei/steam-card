@@ -5,12 +5,16 @@ import { generateError } from '~~/server/core/render/template/error'
 import { generateSvg } from '~~/server/core/render/template/svg'
 import { getGameCoverUrl, getPlayerSummaries, getRecentlyPlayedGames, getSteamProfile } from '~~/server/core/request/steamApi'
 import { imageUrl2Base64, transparentImageBase64 } from '~~/server/core/utils'
+import { formatErrorForLog } from '~~/server/core/utils/error'
 
-const i18n = initLocale('zhCN')
 const JPEG_PREFIX = 'data:image/jpeg;base64,'
 const PNG_PREFIX = 'data:image/png;base64,'
 
 export default defineEventHandler(async (event) => {
+  const i18n = initLocale('zhCN')
+  setHeader(event, 'Content-Type', 'image/svg+xml')
+  setHeader(event, 'Cache-Control', 'no-store')
+
   try {
     const runtimeConfig = useRuntimeConfig(event)
     const steamKey = runtimeConfig.steamKey
@@ -18,8 +22,6 @@ export default defineEventHandler(async (event) => {
     const blockUsers = runtimeConfig.blockUsers || ''
     const blockApps = runtimeConfig.blockApps || ''
 
-    setHeader(event, 'Content-Type', 'image/svg+xml')
-    setHeader(event, 'Cache-Control', `public, max-age=${cacheTime}`)
     const { _ } = event.context.params as { _: string }
     const splitArr = _.split('/')
     const steamid = splitArr[0]
@@ -160,7 +162,7 @@ export default defineEventHandler(async (event) => {
       config.bg = `game-${gameBase64}`
     }
 
-    return generateSvg({
+    const svg = generateSvg({
       name,
       avatarUrlBase64,
       playerLevel,
@@ -177,9 +179,11 @@ export default defineEventHandler(async (event) => {
       i18n,
       counts,
     })
+    setHeader(event, 'Cache-Control', `public, max-age=${cacheTime}`)
+    return svg
   }
   catch (error) {
-    console.error('[Steam Card] generate error:', error)
-    return generateError(String(error), 'error')
+    console.error(`[Steam Card] generation failed: ${formatErrorForLog(error)}`)
+    return generateError(i18n.get('generation-failed'), i18n.get('try-again'))
   }
 })

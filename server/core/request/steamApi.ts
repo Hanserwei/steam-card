@@ -12,7 +12,10 @@ import { apiFetch } from './fetch'
 
 export function getImage(url: string) {
   return $fetch<ArrayBuffer>(url, {
+    retry: 1,
+    retryDelay: 500,
     responseType: 'arrayBuffer',
+    timeout: 10_000,
   })
 }
 
@@ -40,11 +43,18 @@ export function getSteamProfile(steamid: string) {
       'User-Agent':
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36',
     },
+    retry: 1,
+    retryDelay: 500,
+    timeout: 15_000,
   })
 }
 
 export function getGameDetails(id: string | number) {
-  return $fetch<GameDetailsResponse>(`https://store.steampowered.com/api/appdetails?appids=${id}`)
+  return $fetch<GameDetailsResponse>(`https://store.steampowered.com/api/appdetails?appids=${id}`, {
+    retry: 1,
+    retryDelay: 500,
+    timeout: 15_000,
+  })
 }
 
 export async function getGameCoverUrl(id: string | number) {

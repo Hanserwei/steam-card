@@ -8,6 +8,8 @@
   "past_2_weeks": "过去2周",
   "invalid_steamid": "SteamID不合法",
   "error-info": "错误信息",
+  "generation-failed": "Steam 卡片生成失败",
+  "try-again": "请稍后重试",
   "screenshots": "截图",
   "artworks": "艺术作品",
   "reviews": "评测",

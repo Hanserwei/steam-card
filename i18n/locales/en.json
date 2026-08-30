@@ -15,6 +15,7 @@
   "toast": {
     "login-fail": "Login Failed",
     "add-account-success": "Account added successfully",
+    "add-account-fail": "Unable to load this Steam account",
     "already-exists": "Account already exists"
   },
   "config": {
