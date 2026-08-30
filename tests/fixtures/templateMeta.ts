@@ -1,5 +1,5 @@
-import initLocale from 'server/core/locales'
-import type { TemplateMeta } from '~/types'
+import type { TemplateMeta } from '#shared/types'
+import initLocale from '~~/server/core/locales'
 
 const i18n = initLocale('zhCN')
 

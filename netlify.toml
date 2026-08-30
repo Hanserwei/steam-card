@@ -1,17 +1,11 @@
 [build]
-publish = "dist"
-command = "npx pnpm i --store=node_modules/.pnpm-store && npx pnpm run build"
+command = "pnpm build"
 ignore = "git log -1 --pretty=%B | grep skipci"
 
 [build.environment]
-NPM_FLAGS = "--version"
-NODE_VERSION = "18"
-
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+NODE_VERSION = "24.20.0"
 
 [template.environment]
-STEAM_KEY = "your steam API key"
-CACHE_TIME = "request cache time(second)"
+NUXT_STEAM_KEY = "your Steam API key"
+NUXT_CACHE_TIME = "request cache time (seconds)"
+NUXT_PUBLIC_ORIGIN = "public site origin, for example https://card.example.com"

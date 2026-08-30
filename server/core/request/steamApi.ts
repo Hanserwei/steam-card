@@ -7,7 +7,7 @@ import type {
   PlayerParams,
   PlayerSummaries,
   RecentlyPlayedGames,
-} from 'types'
+} from '#shared/types'
 import { apiFetch } from './fetch'
 
 export function getImage(url: string) {

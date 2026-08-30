@@ -1,4 +1,4 @@
-import type { Theme, ThemeProp } from 'types'
+import type { Theme, ThemeProp } from '#shared/types'
 
 export const themes: Record<Theme, ThemeProp> = {
   'dark': {

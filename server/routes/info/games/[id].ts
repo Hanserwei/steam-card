@@ -1,4 +1,4 @@
-import { getOwnedGames } from 'server/core/request/steamApi'
+import { getOwnedGames } from '~~/server/core/request/steamApi'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -21,6 +21,9 @@ export default defineEventHandler(async (event) => {
     }
   }
   catch (error) {
-
+    throw createError({
+      statusCode: 500,
+      statusMessage: error instanceof Error ? error.message : 'Unable to load owned games.',
+    })
   }
 })

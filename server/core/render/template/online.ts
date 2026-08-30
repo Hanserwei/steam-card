@@ -1,5 +1,5 @@
+import type { TemplateMeta } from '#shared/types'
 import { } from './style'
-import type { TemplateMeta } from '~/types'
 
 export function generateOnlineSvg(meta: TemplateMeta) {
   let onlineText = ''

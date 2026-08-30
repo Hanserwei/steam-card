@@ -1,4 +1,4 @@
-import { steamAuth } from 'server/core/utils/steamAuth'
+import { steamAuth } from '~~/server/core/utils/steamAuth'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -11,6 +11,9 @@ export default defineEventHandler(async (event) => {
     }
   }
   catch (error) {
-
+    throw createError({
+      statusCode: 500,
+      statusMessage: error instanceof Error ? error.message : 'Steam authentication failed.',
+    })
   }
 })

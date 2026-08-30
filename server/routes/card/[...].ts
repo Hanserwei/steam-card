@@ -1,10 +1,10 @@
-import { getGameCoverUrl, getPlayerSummaries, getRecentlyPlayedGames, getSteamProfile } from 'server/core/request/steamApi'
-import { crawler, data, parseUrlConfig } from 'server/core/logic'
-import initLocale from 'server/core/locales'
-import type { Count } from 'types'
-import { imageUrl2Base64, transparentImageBase64 } from 'server/core/utils'
-import { generateError } from '~/server/core/render/template/error'
-import { generateSvg } from '~/server/core/render/template/svg'
+import type { Count } from '#shared/types'
+import initLocale from '~~/server/core/locales'
+import { crawler, data, parseUrlConfig } from '~~/server/core/logic'
+import { generateError } from '~~/server/core/render/template/error'
+import { generateSvg } from '~~/server/core/render/template/svg'
+import { getGameCoverUrl, getPlayerSummaries, getRecentlyPlayedGames, getSteamProfile } from '~~/server/core/request/steamApi'
+import { imageUrl2Base64, transparentImageBase64 } from '~~/server/core/utils'
 
 const i18n = initLocale('zhCN')
 const JPEG_PREFIX = 'data:image/jpeg;base64,'
@@ -23,9 +23,9 @@ export default defineEventHandler(async (event) => {
     const { _ } = event.context.params as { _: string }
     const splitArr = _.split('/')
     const steamid = splitArr[0]
-    const settings = splitArr[1]
+    const settings = splitArr[1] ?? ''
     const numberReg = /[A-Z]/i
-    if (steamid.match(numberReg) !== null)
+    if (!steamid || steamid.match(numberReg) !== null)
       return generateError(i18n.get('invalid_steamid'), i18n.get('error-info'))
 
     if (blockUsers.split(',').includes(steamid))
@@ -45,6 +45,9 @@ export default defineEventHandler(async (event) => {
       getSteamProfile(steamid),
     ])
     const [player, playedGames, profile] = AllData
+    const userInfo = player.response.players[0]
+    if (!userInfo)
+      return generateError(i18n.get('invalid_steamid'), i18n.get('error-info'))
 
     const {
       gameCount,
@@ -60,7 +63,7 @@ export default defineEventHandler(async (event) => {
       avatarUrl,
     } = crawler(profile)
 
-    const { games, playTime, name, isOnline } = data(player.response.players[0], playedGames.response, blockApps)
+    const { games, playTime, name, isOnline } = data(userInfo, playedGames.response, blockApps)
     let badgeIcon = ''
     if (badgeIconUrl) {
       badgeIcon = await imageUrl2Base64(badgeIconUrl)
@@ -70,23 +73,21 @@ export default defineEventHandler(async (event) => {
     let avatarUrlBase64 = await imageUrl2Base64(avatarUrl!)
     avatarUrlBase64 = avatarUrlBase64 ? JPEG_PREFIX + avatarUrlBase64 : transparentImageBase64
 
-    for (let i = 0; i < groupIconList.length; i++) {
-      groupIconList[i] = await imageUrl2Base64(groupIconList[i])
-      groupIconList[i] = JPEG_PREFIX + groupIconList[i]
+    for (const [index, groupIconUrl] of groupIconList.entries()) {
+      const groupIcon = await imageUrl2Base64(groupIconUrl)
+      groupIconList[index] = groupIcon ? JPEG_PREFIX + groupIcon : transparentImageBase64
     }
 
-    const gameImgs = []
+    const gameImgs: string[] = []
 
-    for (let i = 0; i < games.length; i++) {
-      const url = await getGameCoverUrl(games[i].appid)
+    for (const game of games) {
+      const url = await getGameCoverUrl(game.appid)
       if (url) {
-        gameImgs[i] = await imageUrl2Base64(url)
-        gameImgs[i] = gameImgs[i]
-          ? JPEG_PREFIX + gameImgs[i]
-          : transparentImageBase64
+        const gameImage = await imageUrl2Base64(url)
+        gameImgs.push(gameImage ? JPEG_PREFIX + gameImage : transparentImageBase64)
       }
       else {
-        gameImgs[i] = transparentImageBase64
+        gameImgs.push(transparentImageBase64)
       }
     }
 
@@ -148,7 +149,7 @@ export default defineEventHandler(async (event) => {
         }>(`/info/games/${steamid}`)
         url = await getGameCoverUrl(appid!)
       }
-      else {
+      else if (arrs[2]) {
         url = await getGameCoverUrl(arrs[2])
       }
       let gameBase64 = transparentImageBase64

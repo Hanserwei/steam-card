@@ -1,4 +1,4 @@
-import type { Count, TemplateMeta } from '~/types'
+import type { Count, TemplateMeta } from '#shared/types'
 
 export function generateCounts(meta: TemplateMeta) {
   let countsSvg = ''

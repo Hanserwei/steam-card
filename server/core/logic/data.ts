@@ -1,4 +1,4 @@
-import type { PlayedGames, Player } from 'types'
+import type { PlayedGames, Player } from '#shared/types'
 
 export function data(userInfo: Player, playedGames: PlayedGames, blockApps: string) {
   const { avatarfull: avatarUrl, personaname: name, personastate: isOnline } = userInfo

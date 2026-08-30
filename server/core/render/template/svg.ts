@@ -1,9 +1,9 @@
-import { generateStyle } from './style'
-import { generateOnlineSvg } from './online'
+import type { TemplateMeta } from '#shared/types'
 import { generateCounts } from './counts'
 import { generateGames } from './games'
 import { generateGroups } from './groups'
-import type { TemplateMeta } from '~/types'
+import { generateOnlineSvg } from './online'
+import { generateStyle } from './style'
 
 export function generateSvg(meta: TemplateMeta) {
   return /* svg */`

@@ -1,13 +1,8 @@
-import en from './en.json' assert {type: 'json'}
-import zhCN from './zhCN.json' assert {type: 'json'}
-import type { Locales } from '~/types'
+import type { CardI18n, Locales } from '#shared/types'
+import en from './en.json'
+import zhCN from './zhCN.json'
 
-export interface I18n {
-  setLocale: (locale: Locales) => void
-  get: (key: string) => string
-}
-
-export default (_default: Locales) => {
+export default (_default: Locales): CardI18n => {
   const Locales = {
     en: en as Record<string, string>,
     zhCN: zhCN as Record<string, string>,

@@ -1,4 +1,4 @@
-import { getPlayerSummaries } from 'server/core/request/steamApi'
+import { getPlayerSummaries } from '~~/server/core/request/steamApi'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -9,10 +9,17 @@ export default defineEventHandler(async (event) => {
       key: steamKey,
       steamids: id,
     })
+    const player = response.players[0]
+    if (!player) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: 'Steam user not found.',
+      })
+    }
 
     return {
-      avatar: response.players[0].avatarfull,
-      nickName: response.players[0].personaname,
+      avatar: player.avatarfull,
+      nickName: player.personaname,
     }
   }
   catch (error) {

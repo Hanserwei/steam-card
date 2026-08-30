@@ -49,10 +49,11 @@
 | ----------- | ----------- | ----------- |
 | NUXT_STEAM_KEY      | [Steam Api Key](https://steamcommunity.com/dev/apikey) | 5B23D7ECExxxxxxB58C57BC242 |
 | NUXT_CACHE_TIME   | request cache time (second)| 3600 |
+| NUXT_PUBLIC_ORIGIN | optional public site origin | https://card.example.com |
 
 ### PaaS
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyuyinws%2Fsteam-card&env=NUXT_STEAM_KEY,NUXT_CACHE_TIME)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyuyinws%2Fsteam-card&env=NUXT_STEAM_KEY,NUXT_CACHE_TIME,NUXT_PUBLIC_ORIGIN)
 
 [![Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/yuyinws/steam-card)
 
@@ -60,25 +61,30 @@
 
 [![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/JREX1V)
 
+The project uses Nuxt 4 and Nitro, so it can run on Vercel, Netlify, EdgeOne Pages, a regular Node.js server, or any cloud platform that accepts OCI images.
+
 ### Docker
 
 ```shell
-docker pull lyc575757/steam-card
+docker build -t steam-card .
 ```
 
 ```shell
 docker run -d \
 -e NUXT_STEAM_KEY=5B23D7ECE730xxxxxxxxx57BC242 \
 -e NUXT_CACHE_TIME=3600 \
+-e NUXT_PUBLIC_ORIGIN=https://card.example.com \
 -p 3000:3000 \
-lyc575757/steam-card
+steam-card
 ```
 
 ## ⚒️ Develop
 
 > Requirement:
 >
-> **Node >=16**
+> **Node 24 LTS**
+>
+> **pnpm 11.24.0**
 >
 > **[Steam Api Key](https://steamcommunity.com/dev/apikey)**
 
@@ -90,18 +96,16 @@ cp .env.example .env
 Add your Steam API KEY on .env file
 ```shell
 NUXT_STEAM_KEY=YOUR_STEAM_KEY
+NUXT_CACHE_TIME=3600
 ```
 
 ```shell
 # install dependencies
-pnpm install 
-# or
-yarn install
-# or
-npm install
+corepack enable
+pnpm install --frozen-lockfile
 
 # start the service
-npm run dev
+pnpm dev
 ```
 
 ## ❤️ Credits

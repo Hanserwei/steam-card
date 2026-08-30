@@ -1,5 +1,5 @@
+import type { TemplateMeta } from '#shared/types'
 import { themes } from '../theme'
-import type { TemplateMeta } from '~/types'
 
 export function generateStyle(meta: TemplateMeta) {
   const { bg_color, text_color, online_color, offline_color } = themes[meta.theme]

@@ -1,5 +1,5 @@
-import type { Config, Statistic } from 'types'
-import { defaultStatistics, statisticsList, themes } from '@/utils/constant'
+import type { Config, Statistic } from '#shared/types'
+import { defaultStatistics, statisticsList, themes } from '~/utils/constant'
 
 export function parseUrlConfig(_setting: string) {
   const config: Config = {

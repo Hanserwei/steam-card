@@ -10,7 +10,7 @@ export async function imageUrl2Base64(url: string): Promise<string> {
     }
     return ''
   }
-  catch (error) {
+  catch {
     return ''
   }
 }

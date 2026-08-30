@@ -1,4 +1,4 @@
-import type { TemplateMeta } from '~/types'
+import type { TemplateMeta } from '#shared/types'
 
 export function generateGroups(meta: TemplateMeta) {
   if (!meta.group)

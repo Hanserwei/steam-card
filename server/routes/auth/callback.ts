@@ -1,4 +1,4 @@
-import { steamAuth } from 'server/core/utils/steamAuth'
+import { steamAuth } from '~~/server/core/utils/steamAuth'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
 
     return sendRedirect(event, `/login?openid=${openid}`, 302)
   }
-  catch (error) {
+  catch {
     throw createError({
       statusCode: 400,
       statusMessage: 'Auth Fail',

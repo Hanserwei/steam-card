@@ -1,10 +1,27 @@
-FROM node:18-alpine as build-stage
+FROM node:24-alpine AS build
 
-COPY ./ /app
 WORKDIR /app
 
-RUN npm install pnpm -g && pnpm install && pnpm run build
+RUN npm install --global pnpm@11.24.0
 
-CMD node .output/server/index.mjs
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+RUN pnpm install --frozen-lockfile
+
+COPY . .
+RUN pnpm build
+
+FROM node:24-alpine AS runtime
+
+ENV NODE_ENV=production \
+    HOST=0.0.0.0 \
+    PORT=3000
+
+WORKDIR /app
+
+COPY --from=build --chown=node:node /app/.output ./.output
+
+USER node
 
 EXPOSE 3000
+
+CMD ["node", ".output/server/index.mjs"]

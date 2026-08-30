@@ -1,17 +1,19 @@
-import { fileURLToPath } from 'node:url'
-import { env } from 'node:process'
 import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
+  compatibilityDate: '2026-08-30',
+  devtools: {
+    enabled: true,
+  },
   modules: [
     '@vueuse/nuxt',
     '@nuxt/ui',
     '@nuxt/devtools',
     '@nuxtjs/i18n',
     '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt',
+    'pinia-plugin-persistedstate/nuxt',
+    'vue-sonner/nuxt',
     'unplugin-turbo-console/nuxt',
-    '@nuxt/test-utils/module',
   ],
   i18n: {
     langDir: 'locales',
@@ -19,13 +21,13 @@ export default defineNuxtConfig({
     locales: [
       {
         code: 'en',
-        iso: 'en',
+        language: 'en',
         file: 'en.json',
         name: 'English',
       },
       {
         code: 'zhCN',
-        iso: 'zh-CN',
+        language: 'zh-CN',
         file: 'zh-CN.json',
         name: '简体中文',
       },
@@ -36,35 +38,29 @@ export default defineNuxtConfig({
       redirectOn: 'root',
     },
   },
-  piniaPersistedstate: {
+  piniaPluginPersistedstate: {
     storage: 'localStorage',
   },
+  turboConsole: {
+    inspector: false,
+  },
   ssr: false,
-  ui: {
-    icons: ['bi', 'gridicons', 'ri', 'icon-park-outline', 'tabler', 'ant-design'],
-  },
-  build: {
-    transpile: ['vue-sonner'],
-  },
-  alias: {
-    server: fileURLToPath(new URL('./server', import.meta.url)),
-    types: fileURLToPath(new URL('./types', import.meta.url)),
-  },
   css: [
+    '~/assets/css/main.css',
     'atropos/css',
   ],
-  vite: {
-    define: {
-      __ORIGIN__: JSON.stringify(env.ORIGIN || ''),
+  vue: {
+    compilerOptions: {
+      isCustomElement: tag => tag === 'atropos-component',
     },
-  },
-  appConfig: {
-    origin: env.ORIGIN || '',
   },
   runtimeConfig: {
     blockApps: '',
     blockUsers: '',
     steamKey: '',
     cacheTime: '',
+    public: {
+      origin: '',
+    },
   },
 })
