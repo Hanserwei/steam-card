@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
     } = crawler(profile)
 
     const { games, playTime, name, isOnline } = data(userInfo, playedGames.response, blockApps)
-    let badgeIcon = ''
+    let badgeIcon = transparentImageBase64
     if (badgeIconUrl) {
       badgeIcon = await imageUrl2Base64(badgeIconUrl)
       badgeIcon = badgeIcon ? PNG_PREFIX + badgeIcon : transparentImageBase64

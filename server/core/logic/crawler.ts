@@ -29,7 +29,12 @@ export function crawler(html: string) {
 
   groupCount = groupCount.toString().replaceAll('\n', '').replaceAll('\t', '')
 
-  const badgeIconUrl = $('.favorite_badge_icon').children().attr('src') as string
+  const favoriteBadgeIcon = $('.favorite_badge_icon img').first()
+  const profileBadgeIcon = $('.profile_badges_badge img.badge_icon').first()
+  const badgeIconUrl = favoriteBadgeIcon.attr('src')
+    || favoriteBadgeIcon.attr('data-src')
+    || profileBadgeIcon.attr('src')
+    || profileBadgeIcon.attr('data-src')
 
   $('.count_link_label').each((i, el) => {
     const itemName = $(el).text()
